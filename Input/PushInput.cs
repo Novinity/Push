@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Push.Input {
     internal class PushInput : BaseCWInput, IExposedSetting {
         public override KeyCode GetDefaultKey() {
-            return KeyCode.Q;
+            return KeyCode.E;
         }
 
         public string GetDisplayName() {
