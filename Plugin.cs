@@ -1,48 +1,40 @@
-using BepInEx;
-using BepInEx.Logging;
 using HarmonyLib;
+using INeedWorkshopDeps.Attributes;
 using Push.Input;
+using UnityEngine;
 
 namespace Push {
-    [ContentWarningPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_VERSION, true)]
-    [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-    [BepInDependency("com.visualerror.inputapi", BepInDependency.DependencyFlags.HardDependency)]
-    public class Plugin : BaseUnityPlugin {
+    [ContentWarningPlugin("novinity.Push", "1.0.1", true)]
+    [ContentWarningDependency(3382537338)]
+    public class Plugin {
         public static Plugin Instance { get; private set; } = null!;
-        internal new static ManualLogSource Logger { get; private set; } = null!;
         internal static Harmony? Harmony { get; set; }
-        internal PushInput pushInput = new PushInput();
+        internal static PushInput pushInput = new PushInput();
 
-        internal static ModConfig BoundConfig { get; private set; } = null!;
-
-        private void Awake() {
-            Logger = base.Logger;
-            Instance = this;
-
-            BoundConfig = new ModConfig(base.Config);
+        static Plugin() {
             pushInput.Enable();
 
             Patch();
 
-            Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded!");
+            Debug.Log($"{"novinity.Push"} v{"1.0.1"} has loaded!");
         }
 
         internal static void Patch() {
-            Harmony ??= new Harmony(MyPluginInfo.PLUGIN_GUID);
+            Harmony ??= new Harmony("novinity.Push");
 
-            Logger.LogDebug("Patching...");
+            Debug.Log("Patching...");
 
             Harmony.PatchAll();
 
-            Logger.LogDebug("Finished patching!");
+            Debug.Log("Finished patching!");
         }
 
         internal static void Unpatch() {
-            Logger.LogDebug("Unpatching...");
+            Debug.Log("Unpatching...");
 
             Harmony?.UnpatchSelf();
 
-            Logger.LogDebug("Finished unpatching!");
+            Debug.Log("Finished unpatching!");
         }
     }
 }

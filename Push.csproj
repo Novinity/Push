@@ -5,6 +5,7 @@
         <Product>novinity.Push</Product>
         <!-- Change to whatever version you're currently on. -->
         <Version>1.0.0</Version>
+        <CWDir Condition=" '$(CWDir)' == '' ">F:\SteamLibrary\steamapps\common\Content Warning</CWDir>
     </PropertyGroup>
 
     <!-- Project Properties -->
@@ -41,30 +42,50 @@
 
     <!-- Primary Package References -->
     <ItemGroup>
-        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
-        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.*" PrivateAssets="all" />
-        <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
-        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" PrivateAssets="all" />
-        <PackageReference Include="UnityEngine.Modules" Version="2022.3.10" PrivateAssets="all" />
-	<PackageReference Include="ContentWarning.GameLibs.Steam" Version="*-*" Publicize="true" PrivateAssets="all" />
+        <Reference Include="UnityEngine.CoreModule">
+            <HintPath>$(CWDir)\Content Warning_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.PhysicsModule">
+            <HintPath>$(CWDir)\Content Warning_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+        </Reference>
+        <Reference Include="Unity.Mathematics">
+            <HintPath>$(CWDir)\Content Warning_Data\Managed\Unity.Mathematics.dll</HintPath>
+        </Reference>
+        <Reference Include="Assembly-CSharp" Publicize="true" Private="false">
+            <HintPath>$(CWDir)\Content Warning_Data\Managed\Assembly-CSharp.dll</HintPath>
+        </Reference>
+        <Reference Include="Zorro.Settings.Runtime">
+            <HintPath>$(CWDir)\Content Warning_Data\Managed\Zorro.Settings.Runtime.dll</HintPath>
+        </Reference>
+        <Reference Include="0Harmony">
+            <HintPath>$(CWDir)\Content Warning_Data\Managed\0Harmony.dll</HintPath>
+        </Reference>
+        <Reference Include="com.visualerror.inputapi">
+            <HintPath>F:\Programming\Modding\ContentWarning\CW_InputAPI\Thunderstore\com.visualerror.inputapi.dll</HintPath>
+        </Reference>
+        <Reference Include="INeedWorkshopDeps.preload">
+            <HintPath>F:\SteamLibrary\steamapps\workshop\content\2881650\3396439930\INeedWorkshopDeps.preload.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
     </ItemGroup>
 
-    <!-- References - Game Assemblies -->
-    <ItemGroup Condition="$(CI) != 'true'">
-        <Reference Include="$(ManagedDirectory)Assembly-CSharp.dll" Publicize="true" Private="false" />
+    <ItemGroup>
+        <Reference Include="PhotonUnityNetworking">
+            <HintPath>$(CWDir)\Content Warning_Data\Managed\PhotonUnityNetworking.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
-    <!-- Package References - Game Assemblies -->
-    <ItemGroup Condition="$(CI) == 'true'">
-        
-    </ItemGroup>
+    <Target Name="CopyOutputFileToGame" AfterTargets="Build">
+        <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(CWDir)\Plugins\Push" />
+    </Target>
+
     <ItemGroup>
-      <Reference Include="com.visualerror.inputapi">
-        <HintPath>C:\Users\novin\AppData\Roaming\r2modmanPlus-local\ContentWarning\profiles\Dev\BepInEx\plugins\Ryokune-InputAPI\com.visualerror.inputapi.dll</HintPath>
-      </Reference>
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
+
+        <!-- Publicize by assembly name -->
+        <Publicize Include="Assembly-CSharp" />
     </ItemGroup>
 </Project>
